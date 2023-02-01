@@ -2,7 +2,7 @@ import telebot
 import openai
 
 bot = telebot.TeleBot("5854203921:AAGk3aRe-ExjoE0w9ETAwXEbCs1QnXt11tA")
-openai.api_key = "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"
+openai.api_key = "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"
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
     response = openai.Completion.create(
@@ -14,5 +14,5 @@ def handle_text(message):
         temperature=0.5,
     )
     bot.send_message(message.chat.id, response.choices[0].text)
-    
-bot.polling()    
+
+bot.polling()
