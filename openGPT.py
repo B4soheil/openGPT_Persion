@@ -1,34 +1,18 @@
 import telebot
-from telebot import types
 import openai
-openai.api_key = "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"
-api = '5854203921:AAGk3aRe-ExjoE0w9ETAwXEbCs1QnXt11tA'
-bot = telebot.TeleBot(api)
 
-def rsp(question):
-    prmt = "Q: {qst}\nA:".format(qst=question)
+bot = telebot.TeleBot("5854203921:AAGk3aRe-ExjoE0w9ETAwXEbCs1QnXt11tA")
+openai.api_key = "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"
+@bot.message_handler(content_types=["text"])
+def handle_text(message):
     response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=prmt,
-        temperature=0,
-        max_tokens=500,
-        top_p=1.0,
-        frequency_penalty=0.0,
-        presence_penalty=0.0
+        engine="text-davinci-003",
+        prompt=f"{message.text}",
+        max_tokens=1024,
+        n=1,
+        stop=None,
+        temperature=0.5,
     )
-    return response.choices[0].text
-@bot.message_handler(commands=['start', 'help', 'about'])
-def send_welcome(message):
- bot.send_message(message.chat.id, 'use /ask followed by a question or statement to generate a response')
- 
-@bot.message_handler(func=lambda message: True) 
-def echo_message(message):
- msg = message.text
- #print(msg)
- response = rsp(msg)
- #print(response)
- bot.send_message(message.chat.id, response)
+    bot.send_message(message.chat.id, response.choices[0].text)
     
- 
-print('bot start running')
-bot.polling()
+bot.polling()    
